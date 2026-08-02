@@ -222,7 +222,16 @@ class Decision(_Frozen):
     ``satisfied_conditions`` and ``failed_conditions`` are emitted in the
     Kernel's fixed evaluation order so that two conformant implementations
     produce identical sequences, not merely identical sets.
+
+    Unlike the request types this is **not** strict, and deliberately so: a
+    Decision must round-trip from its own canonical encoding, where enum members
+    are plain strings. Strict validation would make a persisted Decision Record
+    impossible to rehydrate into the object that produced it, defeating replay.
+    ``extra="forbid"`` still rejects unknown fields, so the shape stays closed;
+    only value coercion from the canonical form is permitted.
     """
+
+    model_config = ConfigDict(frozen=True, extra="forbid", strict=False)
 
     outcome: Outcome
     reason_codes: Sequence[ReasonCode]
