@@ -1,0 +1,73 @@
+{
+  "vector_id": "022-approval-required",
+  "description": "A triggered approval with no failures yields ApprovalRequired, not Allowed.",
+  "normative_reference": "Lexicon §2 canonical outcomes",
+  "spec_version": "1",
+  "kernel_version_min": "0.0.1",
+  "input": {
+    "transition": {
+      "transition_id": "t-1",
+      "transition_type": "CreateWorkRequest",
+      "proposed_by_principal_id": "person-1",
+      "target_type": "WorkRequest",
+      "target_id": null,
+      "operation": "create",
+      "claims": {},
+      "expected_state_revision": null
+    },
+    "principal_active": true,
+    "required_authority": "work_request.create",
+    "current_state_revision": null,
+    "authority_evidence": [
+      {
+        "relationship_id": "rel-1",
+        "relationship_type": "RoleAssignment",
+        "principal_id": "person-1",
+        "target_id": "workspace-1",
+        "granted_authorities": [
+          "work_request.create"
+        ],
+        "effective_from": null,
+        "effective_until": null,
+        "revoked_at": null
+      }
+    ],
+    "policy_versions": [],
+    "constraints": [
+      {
+        "kind": "require_approval",
+        "constraint_id": "c-4",
+        "policy_version": "pol-1@1",
+        "approval_id": "ap-1"
+      }
+    ],
+    "classifications": {},
+    "cumulative_state": {},
+    "delegation": null,
+    "evaluation_time": "2026-08-03T12:00:00Z",
+    "correlation_id": "corr-1"
+  },
+  "expected": {
+    "outcome": "ApprovalRequired",
+    "reason_codes": [
+      "approval.required_by_policy"
+    ],
+    "transition_id": "t-1",
+    "kernel_version": "0.0.1",
+    "evaluated_at": "2026-08-03T12:00:00Z",
+    "resolved_authorities": [
+      "rel-1"
+    ],
+    "policy_versions": [],
+    "satisfied_conditions": [
+      "structural.expected_revision_matches",
+      "principal.active",
+      "authority.explicit_and_effective"
+    ],
+    "failed_conditions": [],
+    "required_approvals": [
+      "ap-1"
+    ],
+    "correlation_id": "corr-1"
+  }
+}

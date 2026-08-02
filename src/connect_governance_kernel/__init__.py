@@ -22,30 +22,53 @@ outside this package.
 The isolation is structural, not aspirational: ``tests/test_kernel_isolation.py``
 scans this package's AST and fails the gate if a forbidden import or an ambient
 source of nondeterminism (``datetime.now``, ``time.time``, ``random``, ``uuid4``)
-appears. The reason is that determinism is only credible if it cannot be quietly
-withdrawn — a Kernel that can read the clock cannot produce reproducible
-explanations of historical decisions, which is the entire purpose of a Decision
-Record (ADR-023, ADR-024).
+appears. Determinism is only credible if it cannot be quietly withdrawn — a
+Kernel that can read the clock cannot produce reproducible explanations of
+historical decisions, which is the entire purpose of a Decision Record
+(ADR-023, ADR-024).
 
-A future alternative Kernel, in any language, must pass the same conformance
-vectors. Those vectors are a first-class artifact, not a test-suite detail.
+The normative behaviour of this package is defined by ``docs/CONFORMANCE.md``
+and the vectors under ``conformance/vectors/``. Those vectors are a
+specification artifact: an independent implementation in any language is judged
+conformant against them, without reading this code.
 """
 
+from .canonical import canonical_json
+from .evaluate import KERNEL_VERSION, STAGE_ORDER, evaluate
 from .types import (
+    AuthorityEvidence,
+    BudgetCeiling,
+    Constraint,
     Decision,
     DecisionRequest,
+    DelegationContext,
+    ForbidClassification,
     Outcome,
+    PolicyVersionRef,
     ReasonCode,
+    RequireApproval,
+    RequireClassification,
+    Transition,
+    parse_rfc3339,
 )
 
 __all__ = [
+    "AuthorityEvidence",
+    "BudgetCeiling",
+    "Constraint",
     "Decision",
     "DecisionRequest",
-    "Outcome",
-    "ReasonCode",
+    "DelegationContext",
+    "ForbidClassification",
     "KERNEL_VERSION",
+    "Outcome",
+    "PolicyVersionRef",
+    "ReasonCode",
+    "RequireApproval",
+    "RequireClassification",
+    "STAGE_ORDER",
+    "Transition",
+    "canonical_json",
+    "evaluate",
+    "parse_rfc3339",
 ]
-
-#: Recorded on every Decision so a historical Decision Record can be replayed
-#: against the Kernel version that produced it.
-KERNEL_VERSION = "0.0.1"

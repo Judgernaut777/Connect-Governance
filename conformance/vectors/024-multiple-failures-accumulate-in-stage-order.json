@@ -1,0 +1,63 @@
+{
+  "vector_id": "024-multiple-failures-accumulate-in-stage-order",
+  "description": "Evaluation does not short-circuit: every stage contributes evidence, in normative order.",
+  "normative_reference": "CONFORMANCE.md evaluation order",
+  "spec_version": "1",
+  "kernel_version_min": "0.0.1",
+  "input": {
+    "transition": {
+      "transition_id": "t-1",
+      "transition_type": "CreateWorkRequest",
+      "proposed_by_principal_id": "person-1",
+      "target_type": "WorkRequest",
+      "target_id": null,
+      "operation": "create",
+      "claims": {},
+      "expected_state_revision": "rev-1"
+    },
+    "principal_active": false,
+    "required_authority": "work_request.create",
+    "current_state_revision": "rev-2",
+    "authority_evidence": [],
+    "policy_versions": [],
+    "constraints": [
+      {
+        "kind": "budget_ceiling",
+        "constraint_id": "c-3",
+        "policy_version": "pol-1@1",
+        "key": "usd",
+        "limit": 10.0
+      }
+    ],
+    "classifications": {},
+    "cumulative_state": {
+      "usd": 50.0
+    },
+    "delegation": null,
+    "evaluation_time": "2026-08-03T12:00:00Z",
+    "correlation_id": "corr-1"
+  },
+  "expected": {
+    "outcome": "Denied",
+    "reason_codes": [
+      "transition.expected_revision_stale",
+      "principal.inactive",
+      "authority.none_explicit",
+      "budget.ceiling_exceeded"
+    ],
+    "transition_id": "t-1",
+    "kernel_version": "0.0.1",
+    "evaluated_at": "2026-08-03T12:00:00Z",
+    "resolved_authorities": [],
+    "policy_versions": [],
+    "satisfied_conditions": [],
+    "failed_conditions": [
+      "structural.expected_revision_matches",
+      "principal.active",
+      "authority.explicit_and_effective",
+      "c-3"
+    ],
+    "required_approvals": [],
+    "correlation_id": "corr-1"
+  }
+}

@@ -34,14 +34,25 @@ def _request() -> DecisionRequest:
     return DecisionRequest(
         transition=_transition(),
         principal_active=True,
+        required_authority="work_request.create",
         evaluation_time="2026-08-03T12:00:00Z",
     )
 
 
 def test_evaluation_time_is_a_required_explicit_input() -> None:
-    """The Kernel never reads a clock; the caller must supply the time."""
-    with pytest.raises(ValidationError):
-        DecisionRequest(transition=_transition(), principal_active=True)  # type: ignore[call-arg]
+    """The Kernel never reads a clock; the caller must supply the time.
+
+    The error is asserted to be specifically about ``evaluation_time`` — a bare
+    ``pytest.raises(ValidationError)`` would keep passing if this field became
+    optional and some unrelated field went missing instead.
+    """
+    with pytest.raises(ValidationError) as exc:
+        DecisionRequest(  # type: ignore[call-arg]
+            transition=_transition(),
+            principal_active=True,
+            required_authority="work_request.create",
+        )
+    assert any(e["loc"] == ("evaluation_time",) for e in exc.value.errors())
 
 
 def test_request_is_frozen() -> None:

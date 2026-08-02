@@ -1,0 +1,64 @@
+{
+  "vector_id": "011-offset-equivalence",
+  "description": "The same instant expressed with a non-Z offset compares identically.",
+  "normative_reference": "CONFORMANCE.md RFC 3339 handling",
+  "spec_version": "1",
+  "kernel_version_min": "0.0.1",
+  "input": {
+    "transition": {
+      "transition_id": "t-1",
+      "transition_type": "CreateWorkRequest",
+      "proposed_by_principal_id": "person-1",
+      "target_type": "WorkRequest",
+      "target_id": null,
+      "operation": "create",
+      "claims": {},
+      "expected_state_revision": null
+    },
+    "principal_active": true,
+    "required_authority": "work_request.create",
+    "current_state_revision": null,
+    "authority_evidence": [
+      {
+        "relationship_id": "rel-1",
+        "relationship_type": "RoleAssignment",
+        "principal_id": "person-1",
+        "target_id": "workspace-1",
+        "granted_authorities": [
+          "work_request.create"
+        ],
+        "effective_from": "2026-08-03T13:00:00+01:00",
+        "effective_until": null,
+        "revoked_at": null
+      }
+    ],
+    "policy_versions": [],
+    "constraints": [],
+    "classifications": {},
+    "cumulative_state": {},
+    "delegation": null,
+    "evaluation_time": "2026-08-03T12:00:00Z",
+    "correlation_id": "corr-1"
+  },
+  "expected": {
+    "outcome": "Allowed",
+    "reason_codes": [
+      "permitted"
+    ],
+    "transition_id": "t-1",
+    "kernel_version": "0.0.1",
+    "evaluated_at": "2026-08-03T12:00:00Z",
+    "resolved_authorities": [
+      "rel-1"
+    ],
+    "policy_versions": [],
+    "satisfied_conditions": [
+      "structural.expected_revision_matches",
+      "principal.active",
+      "authority.explicit_and_effective"
+    ],
+    "failed_conditions": [],
+    "required_approvals": [],
+    "correlation_id": "corr-1"
+  }
+}
