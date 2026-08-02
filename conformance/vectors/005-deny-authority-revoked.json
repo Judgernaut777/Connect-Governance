@@ -1,0 +1,63 @@
+{
+  "vector_id": "005-deny-authority-revoked",
+  "description": "Revoked authority is not in force.",
+  "normative_reference": "Lexicon §6 Revocation",
+  "spec_version": "1",
+  "kernel_version_min": "0.0.1",
+  "input": {
+    "transition": {
+      "transition_id": "t-1",
+      "transition_type": "CreateWorkRequest",
+      "proposed_by_principal_id": "person-1",
+      "target_type": "WorkRequest",
+      "target_id": null,
+      "operation": "create",
+      "claims": {},
+      "expected_state_revision": null
+    },
+    "principal_active": true,
+    "required_authority": "work_request.create",
+    "current_state_revision": null,
+    "authority_evidence": [
+      {
+        "relationship_id": "rel-1",
+        "relationship_type": "RoleAssignment",
+        "principal_id": "person-1",
+        "target_id": "workspace-1",
+        "granted_authorities": [
+          "work_request.create"
+        ],
+        "effective_from": null,
+        "effective_until": null,
+        "revoked_at": "2026-08-01T00:00:00Z"
+      }
+    ],
+    "policy_versions": [],
+    "constraints": [],
+    "classifications": {},
+    "cumulative_state": {},
+    "delegation": null,
+    "evaluation_time": "2026-08-03T12:00:00Z",
+    "correlation_id": "corr-1"
+  },
+  "expected": {
+    "outcome": "Denied",
+    "reason_codes": [
+      "authority.revoked"
+    ],
+    "transition_id": "t-1",
+    "kernel_version": "0.0.1",
+    "evaluated_at": "2026-08-03T12:00:00Z",
+    "resolved_authorities": [],
+    "policy_versions": [],
+    "satisfied_conditions": [
+      "structural.expected_revision_matches",
+      "principal.active"
+    ],
+    "failed_conditions": [
+      "authority.explicit_and_effective"
+    ],
+    "required_approvals": [],
+    "correlation_id": "corr-1"
+  }
+}

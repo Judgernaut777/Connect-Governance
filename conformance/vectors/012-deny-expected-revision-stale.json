@@ -1,0 +1,65 @@
+{
+  "vector_id": "012-deny-expected-revision-stale",
+  "description": "A Decision evaluated against stale state must not apply to incompatible current state.",
+  "normative_reference": "RA v0.2 §12 concurrency and integrity",
+  "spec_version": "1",
+  "kernel_version_min": "0.0.1",
+  "input": {
+    "transition": {
+      "transition_id": "t-1",
+      "transition_type": "CreateWorkRequest",
+      "proposed_by_principal_id": "person-1",
+      "target_type": "WorkRequest",
+      "target_id": null,
+      "operation": "create",
+      "claims": {},
+      "expected_state_revision": "rev-1"
+    },
+    "principal_active": true,
+    "required_authority": "work_request.create",
+    "current_state_revision": "rev-2",
+    "authority_evidence": [
+      {
+        "relationship_id": "rel-1",
+        "relationship_type": "RoleAssignment",
+        "principal_id": "person-1",
+        "target_id": "workspace-1",
+        "granted_authorities": [
+          "work_request.create"
+        ],
+        "effective_from": null,
+        "effective_until": null,
+        "revoked_at": null
+      }
+    ],
+    "policy_versions": [],
+    "constraints": [],
+    "classifications": {},
+    "cumulative_state": {},
+    "delegation": null,
+    "evaluation_time": "2026-08-03T12:00:00Z",
+    "correlation_id": "corr-1"
+  },
+  "expected": {
+    "outcome": "Denied",
+    "reason_codes": [
+      "transition.expected_revision_stale"
+    ],
+    "transition_id": "t-1",
+    "kernel_version": "0.0.1",
+    "evaluated_at": "2026-08-03T12:00:00Z",
+    "resolved_authorities": [
+      "rel-1"
+    ],
+    "policy_versions": [],
+    "satisfied_conditions": [
+      "principal.active",
+      "authority.explicit_and_effective"
+    ],
+    "failed_conditions": [
+      "structural.expected_revision_matches"
+    ],
+    "required_approvals": [],
+    "correlation_id": "corr-1"
+  }
+}

@@ -11,10 +11,10 @@ milestone below integrates with them rather than reimplementing them.
 Language-neutral. ADR directory, canonical-corpus pointer, constitutional invariant checklist,
 this roadmap, repository boundary statement.
 
-## R1 — Kernel package and conformance vectors
+## R1 — Kernel package and conformance vectors ✅
 
 The framework-independent Decision Kernel with its pure `evaluate()` contract, plus the first
-conformance vectors. **Determinism and isolation are tested before any persistence or API
+conformance vectors — **26 vectors + `docs/CONFORMANCE.md` spec v1**. **Determinism and isolation are tested before any persistence or API
 exists** — that ordering is deliberate, because the Kernel's isolation is the property that
 makes a future alternative implementation substitutable.
 
