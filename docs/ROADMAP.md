@@ -22,7 +22,7 @@ The Kernel must not depend on FastAPI/Starlette, SQLAlchemy/SQLite, network acce
 global state, the system clock, random generation, or any external service. Evaluation time
 and applicable revisions are supplied explicitly by the caller.
 
-## R2 — Minimal governed state
+## R2 — Minimal governed state ✅
 
 Only what the vertical slice requires: Organization, Workspace, Person, Agent, Work Request
 and revision, and the authority relationships needed to authorize one Transition. Genesis
@@ -30,7 +30,7 @@ establishes the trust root (ADR-042).
 
 Not the full entity model. Not the full transition catalogue.
 
-## R3 — Decision Record and explanation
+## R3 — Decision Record and explanation ✅
 
 Immutable Connect Decision Records with stable machine-readable reason codes and the
 explanation projection.
