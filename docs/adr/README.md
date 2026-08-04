@@ -50,3 +50,5 @@ Constitutional Principle: the invariant this rests on. (when applicable)
 | ADR | Title | Status |
 |---|---|---|
 | [049](ADR-049-technology-stack.md) | First-slice technology stack and Kernel isolation | Accepted |
+| [050](ADR-050-grant-signature-scheme.md) | Execution-grant format and signature scheme (OD-007) | Accepted |
+| [051](ADR-051-issuer-key-custody.md) | Issuer key custody for the first slice (OD-008) | Accepted |
