@@ -23,6 +23,9 @@ app = [
     "uvicorn>=0.30",
     "sqlalchemy>=2.0",
     "alembic>=1.13",
+    # Ed25519 grant signing and verification (R4, ADR-050). Used only by
+    # connect_governance_grants and the application layer, never by the Kernel.
+    "cryptography>=42",
 ]
 dev = [
     "pytest>=8",
