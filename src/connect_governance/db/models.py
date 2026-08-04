@@ -218,3 +218,30 @@ class DecisionRecord(Base):
     correlation_id: Mapped[str | None] = mapped_column(String, nullable=True, index=True)
     work_request_id: Mapped[str | None] = mapped_column(String, nullable=True, index=True)
     work_request_revision: Mapped[str | None] = mapped_column(String, nullable=True)
+
+
+class ExecutionGrantRecord(Base):
+    """Immutable record of one issued execution grant (R4, ADR-038).
+
+    Stores the complete signed artifact in canonical form — payload plus
+    signature — so a later verifier can reproduce the exact signed bytes
+    without trusting a re-serialization. The record references its originating
+    Decision Record; neither is ever edited after issuance.
+    """
+
+    __tablename__ = "execution_grant_records"
+
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    #: The Decision Record whose Allowed outcome authorized this grant.
+    decision_record_id: Mapped[str] = mapped_column(
+        ForeignKey("decision_records.id"), nullable=False, index=True
+    )
+    #: Canonical JSON of the complete ExecutionGrant (payload + signature).
+    grant_json: Mapped[str] = mapped_column(Text, nullable=False)
+    issuer_key_id: Mapped[str] = mapped_column(String, nullable=False, index=True)
+    provider_id: Mapped[str] = mapped_column(String, nullable=False, index=True)
+    work_request_id: Mapped[str] = mapped_column(String, nullable=False, index=True)
+    issued_at: Mapped[str] = mapped_column(String, nullable=False)
+    not_before: Mapped[str | None] = mapped_column(String, nullable=True)
+    not_after: Mapped[str | None] = mapped_column(String, nullable=True)
+    correlation_id: Mapped[str | None] = mapped_column(String, nullable=True, index=True)

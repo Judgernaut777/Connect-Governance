@@ -40,15 +40,20 @@ its hardest problem is expressing expert evidence (resolved authorities, relatio
 traversed, policy versions, failed conditions) to a non-expert operator. Treat that as a
 product problem, not a formatting one.
 
-## R4 — Execution grant issuance and signing
+## R4 — Execution grant issuance and signing ✅
 
 Signed, versioned grants bound to: Work Request and revision, requesting Principal or Agent,
 Organization and Workspace, permitted provider, permitted operations, material arguments or
 argument constraints, data classifications, budget or consumption limits, time limits and
 expiration, delegation limits, Policy version, Kernel version, revocation state.
 
-Grant signing is **new work** — no signing exists anywhere in the ecosystem today. Key custody
-is OD-008; grant format and signature scheme is OD-007.
+Delivered: the pure `connect_governance_grants` package (Ed25519 sign/verify over canonical
+JSON, same isolation discipline as the Kernel, verified against caller-supplied instants —
+never a clock); issuance from **Allowed** Decision Records only, persisted immutably in
+`execution_grant_records`; file-based issuer-key custody with 0600 permissions via
+`python -m connect_governance.keys`; grant conformance vectors in
+`conformance/grant-vectors/`. **OD-007 and OD-008 are resolved by ADR-050 and ADR-051**
+(Ed25519 via `cryptography`; file-based custody for the slice, HSM/KMS explicitly deferred).
 
 ## R5 — ToolConnect point-of-effect redemption
 
