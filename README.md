@@ -20,7 +20,14 @@ authorization Decisions, and execution-grant issuance.
 
 ## Status
 
-**Milestone R0 — repository foundation.** No implementation yet.
+**Milestones R0–R3 merged** (see [docs/ROADMAP.md](docs/ROADMAP.md)):
+
+- **R0/R0b** — repository foundation; Python scaffolding with AST-enforced Kernel isolation
+- **R1** — pure, deterministic `evaluate()` Decision Kernel + 26 conformance vectors
+- **R2** — governed state (SQLAlchemy models, Alembic migrations) + Genesis trust-root operation
+- **R3** — immutable, byte-replayable Decision Records + explanation as a read-time projection
+
+Latest local gate: **207 passed**. Next up: **R4 — execution-grant issuance and signing**.
 
 The corpus this repository implements is **Draft, not ratified** (ADR-045). Do not rename
 APIs, delete capabilities, or restructure other products' repositories because a draft
@@ -37,7 +44,7 @@ document says so.
 See ADR-034. The peer products already exist and ship; this repository integrates with them
 rather than replacing them.
 
-## Planned stack
+## Stack
 
 Recorded in [ADR-049](docs/adr/ADR-049-technology-stack.md). Python 3.11, FastAPI/Starlette,
 Pydantic v2, SQLite for the first slice, SQLAlchemy 2.x + Alembic, pytest with property-based
