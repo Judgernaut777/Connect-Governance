@@ -87,10 +87,10 @@ redemption the provider MUST bind:
 3. `requesting_principal_id` equals the presenting principal → else
    `principal_mismatch`.
 4. `argument_constraints` binds the call:
-   * `argument_constraints["tool"]`, when present, MUST equal the tool being
-     invoked — a grant for another tool is not a grant for this one;
-   * `argument_constraints["source"]`, when present, MUST equal the source the tool
-     is invoked through;
+   * `argument_constraints["tool"]` MUST be present and MUST equal the tool being
+     invoked — a grant that does not name this tool is not a grant for it;
+   * `argument_constraints["source"]`, when the issuer constrained it, MUST equal
+     the source the tool is invoked through;
    * every other constraint key MUST equal the corresponding argument value by exact
      JSON equality.
    A violated constraint is `scope_mismatch` (tool/source) or `args_mismatch`
