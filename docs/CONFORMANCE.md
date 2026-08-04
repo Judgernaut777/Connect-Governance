@@ -299,5 +299,9 @@ verification; key custody, rotation, and revocation distribution; persistence; p
 communication; a general policy language or expression evaluator; approval workflow mechanics
 beyond emitting the requirement; and clock access of any kind.
 
-Grant signing arrives at R4 and depends on OD-007 (grant format and signature scheme) and
-OD-008 (key custody, rotation, revocation, and the verification trust model). Both are open.
+Grant signing arrived at R4 in the separate `connect_governance_grants` package — held to the
+same isolation discipline as this one — with the grant format and signature scheme resolved in
+ADR-050 (OD-007: Ed25519 over the canonical encoding of §9) and key custody in ADR-051 (OD-008:
+file-based for the first slice). Grant conformance vectors live under
+`conformance/grant-vectors/`. Revocation distribution (OD-009) and provider-side redemption
+remain for R5.
