@@ -75,10 +75,23 @@ deferred to R7 rather than half-built. Reference consumer: **ToolConnect** imple
 contract on its `r5-grant-redemption` branch (vendored verifier, byte-compatible with
 gv-001…gv-005 — interop through the artifact, not cross-repo imports).
 
-## R6 — AgentConnect execution linkage
+## R6 — AgentConnect execution linkage ✅
 
 Associate an Execution with the Work Request and capture the **Execution Record**, reusing
 AgentConnect's existing ledger rather than duplicating it.
+
+Delivered: the consumer-facing Execution Record contract —
+[docs/EXECUTION_RECORD.md](EXECUTION_RECORD.md) — defining the record shape
+(`record_format_version: "1"`), the same canonical-JSON/SHA-256 seal discipline as the
+grants, the constructive fail-closed rule (no `succeeded` record without a verified,
+redeemed Provider Enforcement Record), and bidirectional id traversal across the full
+chain *work request → decision → grant → redemption → execution*. **OD-013 is resolved
+for the slice by [ADR-053](adr/ADR-053-execution-record-linkage.md)**: cross-boundary
+linking is id-carrying records with linkage ids sourced from the signed grant payload,
+joined at read time. Reference emitter: **AgentConnect** on branch `r6-execution-linkage`
+(pure `agentconnect.core.execution_records` builder, append-only `execution_records`
+ledger table, and the runtime act/tool loop emitting on every governance-grant
+redemption — success, failure, and refusal alike).
 
 ## R7 — Linked audit trail and the four UI surfaces
 
