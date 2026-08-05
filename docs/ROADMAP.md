@@ -55,7 +55,7 @@ never a clock); issuance from **Allowed** Decision Records only, persisted immut
 `conformance/grant-vectors/`. **OD-007 and OD-008 are resolved by ADR-050 and ADR-051**
 (Ed25519 via `cryptography`; file-based custody for the slice, HSM/KMS explicitly deferred).
 
-## R5 — ToolConnect point-of-effect redemption
+## R5 — ToolConnect point-of-effect redemption ✅
 
 Integrate against ToolConnect's **existing** contract 1.1 grant redemption. This is an
 integration, not a reimplementation: ToolConnect already implements argument-bound single-use
@@ -63,6 +63,17 @@ grants with atomic redemption immediately before execution, plus an optional std
 gateway for callers that cannot be trusted to redeem voluntarily.
 
 Produces the first **Provider Enforcement Record**.
+
+Delivered: the consumer-facing redemption contract —
+[docs/REDEMPTION_CONTRACT.md](REDEMPTION_CONTRACT.md) — defining the artifact, mandatory
+offline verification against a configured trust root (absent root = deny), caller-supplied
+time with half-open windows, scope binding, atomic one-use, and the Provider Enforcement
+Record every attempt must leave. **OD-009 is resolved by
+[ADR-052](adr/ADR-052-grant-revocation-propagation.md)**: short validity windows are the
+revocation mechanism for the slice, the revocation-list format is defined, and propagation is
+deferred to R7 rather than half-built. Reference consumer: **ToolConnect** implements this
+contract on its `r5-grant-redemption` branch (vendored verifier, byte-compatible with
+gv-001…gv-005 — interop through the artifact, not cross-repo imports).
 
 ## R6 — AgentConnect execution linkage
 
