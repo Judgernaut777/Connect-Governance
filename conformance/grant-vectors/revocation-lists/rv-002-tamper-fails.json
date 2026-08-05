@@ -1,0 +1,56 @@
+{
+  "description": "Adding a grant id to the signed list fails verification: the signature no longer covers the bytes.",
+  "expected_revocation_list": {
+    "issued_at": "2026-08-10T12:00:00Z",
+    "issuer_key_id": "ed25519:f294dcbe2bea2831af6df47eaf039ec5b7b223644dd1689f63be2d90bb5d800a",
+    "list_id": "rl-vec-1",
+    "revocation_list_format_version": "1",
+    "revoked_grant_ids": [
+      "g-vec-1",
+      "g-vec-2"
+    ],
+    "signature": "QxcNXi64svXyUQPfpqjL0HX6TwcUoRWLZJZeAzBRrU89ATRpgk5unflS-tn0d-4Wdxy2KdbS3o9DzOq8h9waBw",
+    "signature_scheme": "Ed25519",
+    "supersedes": null
+  },
+  "expected_verification": {
+    "failure_codes": [
+      "signature_mismatch"
+    ],
+    "issuer_key_id": "ed25519:f294dcbe2bea2831af6df47eaf039ec5b7b223644dd1689f63be2d90bb5d800a",
+    "list_id": "rl-vec-1",
+    "signature_valid": false,
+    "valid": false
+  },
+  "normative_reference": "ADR-052 (revocation propagation); ADR-050 (signature scheme)",
+  "payload": {
+    "issued_at": "2026-08-10T12:00:00Z",
+    "issuer_key_id": "ed25519:f294dcbe2bea2831af6df47eaf039ec5b7b223644dd1689f63be2d90bb5d800a",
+    "list_id": "rl-vec-1",
+    "revocation_list_format_version": "1",
+    "revoked_grant_ids": [
+      "g-vec-1",
+      "g-vec-2"
+    ],
+    "signature_scheme": "Ed25519",
+    "supersedes": null
+  },
+  "private_key_pem": "-----BEGIN PRIVATE KEY-----\nMC4CAQAwBQYDK2VwBCIEIDkN5Il+uD9CLnuM+KTlqM+bKDnJql49TksMqQZ8Z3Kh\n-----END PRIVATE KEY-----\n",
+  "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA/XluIVKX4rL4Za5ar1AYWE26XHAjLGGYAoycsyl+/m0=\n-----END PUBLIC KEY-----\n",
+  "revocation_list_format_version": "1",
+  "spec_version": "1",
+  "tampered_payload": {
+    "issued_at": "2026-08-10T12:00:00Z",
+    "issuer_key_id": "ed25519:f294dcbe2bea2831af6df47eaf039ec5b7b223644dd1689f63be2d90bb5d800a",
+    "list_id": "rl-vec-1",
+    "revocation_list_format_version": "1",
+    "revoked_grant_ids": [
+      "g-vec-1",
+      "g-vec-2",
+      "g-vec-3"
+    ],
+    "signature_scheme": "Ed25519",
+    "supersedes": null
+  },
+  "vector_id": "rv-002-tamper-fails"
+}
