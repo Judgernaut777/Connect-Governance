@@ -93,11 +93,36 @@ joined at read time. Reference emitter: **AgentConnect** on branch `r6-execution
 ledger table, and the runtime act/tool loop emitting on every governance-grant
 redemption — success, failure, and refusal alike).
 
-## R7 — Linked audit trail and the four UI surfaces
+## R7 — Linked audit trail and the four UI surfaces ✅
 
 End-to-end traversal from a single identifier across all three record kinds. UI surfaces,
 and only these: Work Request creation and status; Decision and explanation; Marketplace and
 provider activation; the linked audit trail.
+
+Delivered, across four repos (each verified by an independent cross-repo check that
+resolved one end-to-end trail by each of the four linkage identifiers and reproduced
+tamper-evidence on read):
+
+* **Here:** kernel-evaluated, fail-closed Work Request intake
+  (`connect_governance.work_requests.create_work_request` — nothing persists on denial);
+  the `connect_governance.queries` read layer over the already-indexed linkage columns;
+  ADR-052 revocation-list issuance (`connect_governance.revocations`: issuer-signed,
+  monotonic `supersedes` chaining, persisted in `revocation_list_records`, conformance
+  vectors rv-001/rv-002). **Intake and the revocation distribution channel are decided by
+  [ADR-054](adr/ADR-054-work-request-intake-and-revocation-distribution.md).**
+* **ToolConnect:** redemption-side revocation enforcement — `revoked` /
+  `stale_revocation_list`, fail-closed on stale-or-unverifiable lists only for grants
+  whose windows overlap list coverage, denials recorded as Provider Enforcement Records;
+  the governance trust root and revocation list are wired into the CLI
+  (`--gov-trust-root` / `--gov-revocation-list`).
+* **AgentConnect:** read-side chain verification of the execution-record ledger
+  (`ExecutionRecordLedger.verify_chain()` — per-record seal re-verification plus
+  `prev_hash` linkage, first break reported).
+* **Connect-Control:** the four surfaces as server-rendered pages over a read-only
+  audit projection (the three SQLite stores opened `mode=ro`, joined by the linkage
+  ids, chains verified on read). The projection is an explicit, temporary exception to
+  the thin-control-plane "no direct database access" rule, expiring when per-plane
+  record-read APIs land (earmarked R8/R9).
 
 ## R8 — Curated Marketplace surface
 
