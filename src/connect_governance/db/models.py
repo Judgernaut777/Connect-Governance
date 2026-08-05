@@ -199,7 +199,7 @@ class DecisionRecord(Base):
 
     The human-readable explanation is deliberately **not** stored. It is a
     projection built on read from this structured evidence; storing rendered
-    prose would make the record depend on the wording of the day it was written.
+    prose would tie the permanent record to the wording of the day it was written.
     """
 
     __tablename__ = "decision_records"
@@ -245,3 +245,23 @@ class ExecutionGrantRecord(Base):
     not_before: Mapped[str | None] = mapped_column(String, nullable=True)
     not_after: Mapped[str | None] = mapped_column(String, nullable=True)
     correlation_id: Mapped[str | None] = mapped_column(String, nullable=True, index=True)
+
+
+class RevocationListRecord(Base):
+    """Immutable record of one issued ADR-052 revocation list (R7).
+
+    Stores the complete signed artifact in canonical form, like the grant
+    records, so a later verifier can reproduce the exact signed bytes. The
+    ``supersedes`` column is the monotonic chain: issuance refuses a list
+    that does not extend the issuer's current head.
+    """
+
+    __tablename__ = "revocation_list_records"
+
+    list_id: Mapped[str] = mapped_column(String, primary_key=True)
+    issuer_key_id: Mapped[str] = mapped_column(String, nullable=False, index=True)
+    issued_at: Mapped[str] = mapped_column(String, nullable=False)
+    #: Canonical JSON of the complete signed RevocationList.
+    list_json: Mapped[str] = mapped_column(Text, nullable=False)
+    #: The prior list's id, or null for the issuer's first list.
+    supersedes: Mapped[str | None] = mapped_column(String, nullable=True)
