@@ -199,7 +199,7 @@ class DecisionRecord(Base):
 
     The human-readable explanation is deliberately **not** stored. It is a
     projection built on read from this structured evidence; storing rendered
-    prose would tie the permanent record to the wording of the day it was written.
+    prose would make the record depend on the wording of the day it was written.
     """
 
     __tablename__ = "decision_records"
