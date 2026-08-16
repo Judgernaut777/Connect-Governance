@@ -124,11 +124,34 @@ tamper-evidence on read):
   the thin-control-plane "no direct database access" rule, expiring when per-plane
   record-read APIs land (earmarked R8/R9).
 
-## R8 — Curated Marketplace surface
+## R8 — Curated Marketplace surface ✅
 
 Enough to activate ToolConnect as an enforcing provider and display its enforcement
 classification (enforcing vs monitor-only). Deferred: third-party publishing, revenue sharing,
 billing, reviews, recommendations, moderation, disputes, publisher analytics, certification.
+
+Delivered, across three repos (independently verified end to end — listing → kernel
+decision → activation → live classification — with every fail-closed negative
+reproduced):
+
+* **Here:** the curated marketplace model — operator-authored `ProviderListing`
+  (kernel-evaluated `CreateProviderListing`, authority `provider.list`) and governed
+  `ProviderActivation` (`ActivateProvider`, authority `provider.activate`; fail-closed,
+  nothing persists on denial). Enforcement classification is a **declared property with
+  a stored evidence basis** (RA §8, ADR-039/040/041): an `enforcing` listing without
+  classification evidence is refused before kernel evaluation. **Decided by
+  [ADR-055](adr/ADR-055-curated-marketplace-model.md)** — OD-010 (entitlement/pricing)
+  and OD-011 (certification programs) explicitly remain open; `provider.deactivate` is
+  reserved, lifecycle writes deferred.
+* **ToolConnect:** `/health` surfaces governance trust-root posture
+  (`gov_trust_root.configured` / `key_ids`, PEM never exposed) and `gov_provider_id` —
+  the HTTP-observable evidence leg an enforcing classification requires.
+* **Connect-Control:** the marketplace surface — listings, operator-triggered
+  activation through the governance package, and a fail-closed classification badge
+  (enforcing only with all four evidence legs: stored evidence, active activation with
+  its Decision Record, live trust-root + intact audit chain, observable Provider
+  Enforcement Records; anything missing degrades to `unverified`; monitor-only is never
+  presented as preventative, per ADR-039).
 
 ## R9 — Reconciliation pass
 
