@@ -18,7 +18,12 @@ from __future__ import annotations
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from .db.models import DecisionRecord, ExecutionGrantRecord
+from .db.models import (
+    DecisionRecord,
+    ExecutionGrantRecord,
+    ProviderActivation,
+    ProviderListing,
+)
 
 
 def grants_for_work_request(
@@ -84,3 +89,40 @@ def records_for_correlation(
         ).all()
     )
     return decisions, grants
+
+
+def list_listings(session: Session) -> list[ProviderListing]:
+    """Every curated provider listing (R8, ADR-055)."""
+    return list(
+        session.scalars(select(ProviderListing).order_by(ProviderListing.id)).all()
+    )
+
+
+def activations_for_listing(
+    session: Session, listing_id: str
+) -> list[ProviderActivation]:
+    """Every activation of this listing, ordered by id."""
+    return list(
+        session.scalars(
+            select(ProviderActivation)
+            .where(ProviderActivation.listing_id == listing_id)
+            .order_by(ProviderActivation.id)
+        ).all()
+    )
+
+
+def active_activation(session: Session, provider_id: str) -> ProviderActivation | None:
+    """The active activation for this provider, if one exists.
+
+    Joins through the listing (the listing names the provider; the
+    activation names the listing). If more than one activation is somehow
+    active, the first by id wins so the result stays a deterministic
+    function of the data.
+    """
+    return session.scalars(
+        select(ProviderActivation)
+        .join(ProviderListing, ProviderActivation.listing_id == ProviderListing.id)
+        .where(ProviderListing.provider_id == provider_id)
+        .where(ProviderActivation.state == "active")
+        .order_by(ProviderActivation.id)
+    ).first()
