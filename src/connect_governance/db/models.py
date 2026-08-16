@@ -247,6 +247,71 @@ class ExecutionGrantRecord(Base):
     correlation_id: Mapped[str | None] = mapped_column(String, nullable=True, index=True)
 
 
+class ProviderListing(Base):
+    """A curated marketplace listing for a provider (R8, ADR-055).
+
+    Operator-authored only — there is no self-publishing path (ADR-040). The
+    listing is the *declaration*: capabilities, compatibility, and versions in
+    ``metadata_json`` (canonical form, like ``governance_json``), and the
+    enforcement classification the operator attests to. Classification is a
+    DECLARED property (RA v0.2 §8): it is only as strong as the stored evidence
+    basis, and a monitor-only provider must never be presented as enforcing
+    (ADR-039). The schema and the write path enforce ADR-041: a listing
+    declaring ``enforcing`` without evidence does not exist.
+    """
+
+    __tablename__ = "provider_listings"
+    __table_args__ = (
+        CheckConstraint(
+            "enforcement_classification IN ('enforcing', 'monitor_only')",
+            name="ck_provider_listings_classification",
+        ),
+    )
+
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    provider_id: Mapped[str] = mapped_column(String, nullable=False, index=True)
+    name: Mapped[str] = mapped_column(String, nullable=False)
+    #: Capability / compatibility / version metadata, canonical JSON (RA §8).
+    metadata_json: Mapped[str] = mapped_column(Text, nullable=False)
+    enforcement_classification: Mapped[str] = mapped_column(String, nullable=False)
+    #: The evidence basis for the classification, canonical JSON (ADR-041).
+    #: Non-empty for "enforcing"; may be empty for "monitor_only".
+    classification_evidence_json: Mapped[str] = mapped_column(Text, nullable=False)
+    recorded_at: Mapped[str] = mapped_column(String, nullable=False)
+    provenance: Mapped[str] = mapped_column(String, nullable=False)
+
+
+class ProviderActivation(Base):
+    """The governed act of activating a listed provider (R8, ADR-055).
+
+    Activation is a Kernel-evaluated Transition, exactly like Work Request
+    intake: this row exists only because an Allowed Decision exists, and
+    ``decision_record_id`` is the immutable link to the evidence. State is a
+    small vocabulary — ``active``, ``disabled``, ``revoked``; R8 writes only
+    ``active``, the rest of the lifecycle is deferred (ADR-055).
+    """
+
+    __tablename__ = "provider_activations"
+    __table_args__ = (
+        CheckConstraint(
+            "state IN ('active', 'disabled', 'revoked')",
+            name="ck_provider_activations_state",
+        ),
+    )
+
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    listing_id: Mapped[str] = mapped_column(
+        ForeignKey("provider_listings.id"), nullable=False, index=True
+    )
+    #: The Decision Record whose Allowed outcome authorized this activation.
+    decision_record_id: Mapped[str] = mapped_column(
+        ForeignKey("decision_records.id"), nullable=False, index=True
+    )
+    state: Mapped[str] = mapped_column(String, nullable=False)
+    recorded_at: Mapped[str] = mapped_column(String, nullable=False)
+    provenance: Mapped[str] = mapped_column(String, nullable=False)
+
+
 class RevocationListRecord(Base):
     """Immutable record of one issued ADR-052 revocation list (R7).
 
