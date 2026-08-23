@@ -7,17 +7,24 @@ naming the asked-for id, deterministically ordered.
 
 from __future__ import annotations
 
+import json
+
 import pytest
 
+from connect_governance.db.models import AuthorityRelationship, ProviderActivation
 from connect_governance.db.session import create_all, make_engine, session_factory
 from connect_governance.genesis import GenesisRequest, initialize_deployment
 from connect_governance.grants import issue_grant
 from connect_governance.queries import (
+    active_activation,
+    activations_for_listing,
     decisions_for_work_request,
     grants_by_decision_record,
     grants_for_work_request,
+    list_listings,
     records_for_correlation,
 )
+from connect_governance.providers import activate_provider, create_listing
 from connect_governance.work_requests import create_work_request
 
 T = "2026-08-10T09:30:00Z"
@@ -126,3 +133,76 @@ def test_unknown_ids_return_empty(session) -> None:
     assert decisions_for_work_request(session, "wr-nope") == []
     assert grants_by_decision_record(session, "dr-nope") == []
     assert records_for_correlation(session, "corr-nope") == ([], [])
+
+
+def _seed_marketplace(s) -> None:
+    """Two curated listings, one of them activated (R8, ADR-055)."""
+    s.add(
+        AuthorityRelationship(
+            id="auth-operator",
+            relationship_type="OperatorGrant",
+            principal_id="person-1",
+            target_id="org-1",
+            granted_authorities=json.dumps(["provider.list", "provider.activate"]),
+            effective_from=T,
+            effective_until=None,
+            revoked_at=None,
+            recorded_at=T,
+            provenance="auth-genesis",
+        )
+    )
+    s.flush()
+    for n, provider in ((1, "toolconnect"), (2, "agentconnect")):
+        create_listing(
+            s,
+            listing_id=f"lst-{n}",
+            provider_id=provider,
+            name=f"Provider {n}",
+            metadata={"version": "0.7.0"},
+            enforcement_classification="enforcing",
+            classification_evidence={"conformance_vectors": ["rv-001"]},
+            listed_by_principal_id="person-1",
+            transition_id=f"t-list-lst-{n}",
+            decision_record_id=f"dr-list-lst-{n}",
+            recorded_at=T,
+        )
+    activate_provider(
+        s,
+        activation_id="act-1",
+        listing_id="lst-1",
+        activated_by_principal_id="person-1",
+        transition_id="t-activate-act-1",
+        decision_record_id="dr-activate-act-1",
+        recorded_at=T,
+    )
+
+
+def test_list_listings_returns_every_listing(session) -> None:
+    _seed_marketplace(session)
+    assert [l.id for l in list_listings(session)] == ["lst-1", "lst-2"]
+
+
+def test_activations_for_listing(session) -> None:
+    _seed_marketplace(session)
+    activations = activations_for_listing(session, "lst-1")
+    assert [a.id for a in activations] == ["act-1"]
+    assert activations[0].decision_record_id == "dr-activate-act-1"
+    assert activations_for_listing(session, "lst-2") == []
+
+
+def test_active_activation_traverses_listing_to_provider(session) -> None:
+    _seed_marketplace(session)
+    activation = active_activation(session, "toolconnect")
+    assert activation is not None
+    assert activation.id == "act-1"
+    assert activation.state == "active"
+    assert active_activation(session, "agentconnect") is None
+    assert active_activation(session, "nope") is None
+
+
+def test_inactive_activation_is_not_returned(session) -> None:
+    _seed_marketplace(session)
+    row = session.get(ProviderActivation, "act-1")
+    row.state = "disabled"
+    session.flush()
+    assert active_activation(session, "toolconnect") is None

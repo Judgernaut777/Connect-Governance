@@ -55,3 +55,4 @@ Constitutional Principle: the invariant this rests on. (when applicable)
 | [052](ADR-052-grant-revocation-propagation.md) | Grant revocation propagation | Accepted |
 | [053](ADR-053-execution-record-linkage.md) | Execution Record linkage — Harness-emitted, ledger-sealed, grant-sourced ids | Accepted |
 | [054](ADR-054-work-request-intake-and-revocation-distribution.md) | Work Request intake and revocation-list distribution | Accepted |
+| [055](ADR-055-curated-marketplace-model.md) | The curated marketplace model — operator-authored listings and governed provider activation | Accepted |
