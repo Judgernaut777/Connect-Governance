@@ -20,14 +20,30 @@ authorization Decisions, and execution-grant issuance.
 
 ## Status
 
-**Milestones R0–R3 merged** (see [docs/ROADMAP.md](docs/ROADMAP.md)):
+**Milestones R0–R8 merged** (see [docs/ROADMAP.md](docs/ROADMAP.md)):
 
 - **R0/R0b** — repository foundation; Python scaffolding with AST-enforced Kernel isolation
 - **R1** — pure, deterministic `evaluate()` Decision Kernel + 26 conformance vectors
 - **R2** — governed state (SQLAlchemy models, Alembic migrations) + Genesis trust-root operation
 - **R3** — immutable, byte-replayable Decision Records + explanation as a read-time projection
+- **R4** — Ed25519 execution-grant issuance and signing
+- **R5** — ToolConnect point-of-effect redemption
+- **R6** — AgentConnect execution linkage
+- **R7** — linked audit trail and the four UI surfaces
+- **R8** — curated marketplace: listings, governed provider activation, fail-closed
+  enforcement classification
 
-Latest local gate: **207 passed**. Next up: **R4 — execution-grant issuance and signing**.
+Latest local gate: **316 passed**. Next up: **R9 — the reconciliation pass** (resolve each
+existing AgentConnect governance-like capability as preserved, integrated, or reclassified,
+then promote the corpus to Candidate per ADR-045).
+
+Running the gate needs the `[app]` extra — the Kernel itself depends only on `pydantic`, but
+the persistence, migration, and grant-signing tests import SQLAlchemy, Alembic, and
+`cryptography`:
+
+```bash
+pip install -e ".[app,dev]" && python3 -m pytest
+```
 
 The corpus this repository implements is **Draft, not ratified** (ADR-045). Do not rename
 APIs, delete capabilities, or restructure other products' repositories because a draft
